@@ -1,0 +1,7 @@
+{
+    "name": "mapper/mapper-site",
+    "description": "creates a map of a site based on passing through parametres",
+    "require": {
+        "php": ">=7.4"
+    }
+}
