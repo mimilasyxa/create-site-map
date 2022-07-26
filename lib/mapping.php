@@ -70,7 +70,7 @@
 
     function createFilling($fileType, $sites){
         $filling = [];
-        switch ($fileType) {
+        switch (strtoupper($fileType)) {
             case 'JSON':
                 $filling =  json_encode($sites, JSON_PRETTY_PRINT);
                 break;
