@@ -2,8 +2,7 @@
     function getSiteMap($sites, $fileType, $path){
         if(!(checkSites($sites) || checkPath($path, $fileType))){
             fillFile($fileType, $sites, $path);
-        } else {
-        }
+        } 
     }
 
     function fillFile($fileType, $sites, $path){
