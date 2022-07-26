@@ -1,6 +1,7 @@
 {
     "name": "mapper-by-mimilasyxa/mapper-site",
     "description": "creates a map of a site based on passing through parametres",
+    "version" : "1.0.0",
     "require": {
         "php": ">=7.4"
     }
