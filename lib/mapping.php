@@ -1,14 +1,19 @@
 <?php
-    function getSiteMap($sites, $fileType, $path){
+    function getSiteMap(array $sites, string $fileType, string $path){
         if(!(checkSites($sites) || checkPath($path, $fileType))){
-            fillFile($fileType, $sites, $path);
+            return fillFile($fileType, $sites, $path);
         } 
     }
 
     function fillFile($fileType, $sites, $path){
         $filling = createFilling($fileType, $sites);
-        file_put_contents($path, $filling);
+        if (file_put_contents($path, $filling)){;
+            return true;
+        } else {
+            throw new Exception("Файл не был записан");
+        }
     }
+
     function createXMLfilling($sites){
         $filling = '<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
@@ -38,10 +43,11 @@
                 if(!($site['priority'] >= 0 && $site['priority'] <= 1)){
                     throw new Exception("{$site['priority']} Неправильный приоритет парсинга");
                 }
-                if(!validateChangeFreq($site['changefreq'])){
+                if(!validateFreq($site['changefreq'])){
                     throw new Exception("{$site['changefreq']} Неправильная периодичность обновления");
                 }
             }
+            return true;
         } else {
             throw new Exception('Массив страниц сайта пуст');
         }
@@ -51,7 +57,8 @@
         $d = DateTime::createFromFormat($format, $date);
         return $d && $d->format($format) == $date;
     }
-    function validateChangeFreq($changefreq){
+
+    function validateFreq($changefreq){
         $freq = [
             'always',
             'hourly',
@@ -61,7 +68,7 @@
             'yearly',
             'never'
         ];
-        if(array_search($changefreq, $freq)){
+        if(array_search($changefreq, $freq) !== false){
             return true;
         } else {
             return false;
@@ -90,20 +97,19 @@
     }
 
     function checkPath($path, $fileType){
+        $fileTypeUp = strtoupper($fileType);
+        $pathExt = strtoupper(substr($path, strrpos($path, ".") + 1));
         if (!(empty($path) || empty($fileType))){
-            $fileType = strtoupper($fileType);
-            $pathEXT = strtoupper(substr($path, strrpos($path, ".") + 1));
-            if ($fileType == $pathEXT){
+            if ($fileTypeUp == $pathExt){
                 $folders = substr($path, 0, strrpos($path, '/'));
                 if (!file_exists($folders) && !$folders == NULL) {
-                    mkdir($folders, 0777, true);
+                    mkdir($folders, 0644, true);
                 }
             } else {
-                throw new Exception("Расширение {$fileType} не равно расширению {$pathEXT}");
+                throw new Exception("Расширение {$fileTypeUp} не равно расширению {$pathExt}");
             }
         } else {
             throw new Exception("Параметр пути файла или его расширения пуст");
         }
     }
-
 ?>
