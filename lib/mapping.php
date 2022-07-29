@@ -32,25 +32,24 @@
     }
 
     function checkSites($sites){
-        if(!empty($sites)){
-            foreach ($sites as $site){
-                if(filter_var($site['loc'], FILTER_VALIDATE_URL) === false){
-                    throw new Exception("{$site['loc']} Неправильный адрес");
-                }
-                if(!validateDate($site['lastmod'])){
-                    throw new Exception("{$site['lastmod']} Неправильная дата");
-                }
-                if(!($site['priority'] >= 0 && $site['priority'] <= 1)){
-                    throw new Exception("{$site['priority']} Неправильный приоритет парсинга");
-                }
-                if(!validateFreq($site['changefreq'])){
-                    throw new Exception("{$site['changefreq']} Неправильная периодичность обновления");
-                }
-            }
-            return true;
-        } else {
+        if(empty($sites)){
             throw new Exception('Массив страниц сайта пуст');
         }
+        foreach ($sites as $site){
+            if(filter_var($site['loc'], FILTER_VALIDATE_URL) === false){
+                throw new Exception("{$site['loc']} Неправильный адрес");
+            }
+            if(!validateDate($site['lastmod'])){
+                throw new Exception("{$site['lastmod']} Неправильная дата");
+            }
+            if(!($site['priority'] >= 0 && $site['priority'] <= 1)){
+                throw new Exception("{$site['priority']} Неправильный приоритет парсинга");
+            }
+            if(!validateFreq($site['changefreq'])){
+                throw new Exception("{$site['changefreq']} Неправильная периодичность обновления");
+            }
+        }
+        return true;
     }
 
     function validateDate($date, $format = 'Y-m-d'){
@@ -99,17 +98,15 @@
     function checkPath($path, $fileType){
         $fileTypeUp = strtoupper($fileType);
         $pathExt = strtoupper(substr($path, strrpos($path, ".") + 1));
-        if (!(empty($path) || empty($fileType))){
-            if ($fileTypeUp == $pathExt){
-                $folders = substr($path, 0, strrpos($path, '/'));
-                if (!file_exists($folders) && !$folders == NULL) {
-                    mkdir($folders, 0644, true);
-                }
-            } else {
-                throw new Exception("Расширение {$fileTypeUp} не равно расширению {$pathExt}");
-            }
-        } else {
+        if (empty($path) || empty($fileType)){
             throw new Exception("Параметр пути файла или его расширения пуст");
+        }
+        if ($fileTypeUp !== $pathExt){
+            throw new Exception("Расширение {$fileTypeUp} не равно расширению {$pathExt}");
+        }
+        $folders = substr($path, 0, strrpos($path, '/'));
+        if (!file_exists($folders) && !$folders == NULL) {
+            mkdir($folders, 0644, true);
         }
     }
 ?>
