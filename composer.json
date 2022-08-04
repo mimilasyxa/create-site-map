@@ -1,13 +1,16 @@
 {
-    "name": "mapper-by-mimilasyxa/mapper-site",
-    "description": "creates a map of a site based on passing through parametres",
-    "version" : "1.0.0",
-    "require": {
-        "php": ">=7.4"
-    },
+    "name": "lofkes/site-mapping",
+    "description": "a quck lib to create file filled with mapping of a site",
+    "type": "library",
     "autoload": {
-	"psr-4": {
-            "": "lib"
+        "psr-4": {
+            "": "lib/"
         }
-    }
+    },
+    "authors": [
+        {
+            "name": "Mimilasyxa"
+        }
+    ],
+    "require": {}
 }
